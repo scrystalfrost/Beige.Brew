@@ -197,3 +197,143 @@ body { background-color: var(--bg-beige); color: var(--text-main); line-height: 
     #admin-greeting .modal-content { min-width: 90%; }
     #greeting-title { white-space: normal; font-size: 2rem !important; }
 }
+
+/* ========================================= */
+/* RESPONSIVE MOBILE (Max-Width: 768px)      */
+/* ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Navbar & Header */
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem 5%;
+        position: relative; /* Agar tidak melayang menutupi konten di HP kecil */
+    }
+
+    .nav-links {
+        gap: 1rem;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap; /* Agar menu turun jika tidak muat */
+    }
+
+    .nav-item {
+        font-size: 0.8rem; /* Perkecil ukuran font menu */
+    }
+
+    /* 2. Hero Section */
+    .hero {
+        padding: 3rem 5% 1rem; /* Kurangi padding drastis */
+    }
+
+    .hero h1 {
+        font-size: 2.2rem; /* Kecilkan judul utama */
+        margin: 1rem 0;
+    }
+    
+    .hero p {
+        font-size: 0.9rem;
+        padding: 0 10px;
+    }
+
+    /* 3. Controls (Search & Filter) */
+    .menu-controls {
+        padding: 1rem 5%;
+        gap: 1.5rem;
+    }
+
+    #menu-search {
+        padding: 1rem 1.5rem; /* Sedikit lebih ringkas */
+        font-size: 0.9rem;
+    }
+
+    .filter-bar {
+        gap: 0.5rem;
+    }
+
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.75rem;
+    }
+
+    /* 4. Menu Grid (Produk) */
+    .menu-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 2 Kolom di HP */
+        gap: 1rem;
+        padding: 0 5% 3rem;
+    }
+
+    .menu-card {
+        padding: 1rem; /* Card lebih padat */
+    }
+
+    .image-container {
+        height: 140px; /* Gambar produk lebih pendek */
+    }
+
+    .menu-card h3 {
+        font-size: 1rem; /* Nama produk lebih kecil */
+    }
+
+    /* 5. Story Section (Split Layout -> Stack) */
+    .story-section {
+        padding: 3rem 5%;
+    }
+
+    .story-container {
+        flex-direction: column; /* Gambar di atas, Teks di bawah */
+        gap: 3rem;
+        text-align: center; /* Teks jadi rata tengah khusus HP */
+    }
+
+    .story-image-wrapper {
+        width: 100%;
+        max-width: 350px; /* Batasi lebar gambar agar tidak raksasa */
+        margin: 0 auto;
+    }
+
+    .experience-badge {
+        width: 80px;
+        height: 80px;
+        right: -10px; /* Sesuaikan posisi badge */
+        bottom: -20px;
+    }
+
+    .experience-badge .year { font-size: 1.1rem; }
+
+    .story-content h2 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .story-content p {
+        text-align: justify; /* Agar paragraf rapi di layar kecil */
+    }
+    
+    .founder-sign {
+        margin-top: 1.5rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    /* 6. Contact Form */
+    .contact-section {
+        padding: 3rem 5%;
+    }
+    
+    .contact-card {
+        padding: 1.5rem;
+    }
+
+    /* 7. Sidebar Keranjang (Full Width) */
+    .sidebar {
+        width: 85%; /* Jangan 100% agar user masih bisa klik luar untuk tutup */
+        right: -100%;
+    }
+    
+    .sidebar.active {
+        right: 0;
+        box-shadow: -100px 0 0 rgba(0,0,0,0.5); /* Gelapkan sisa layar */
+    }
+}
