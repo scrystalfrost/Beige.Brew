@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin | Beige & Brew</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-beige: #F9F7F2;
+            --accent-brown: #4A3728;
+            --soft-brown: #8C7867;
+            --white: #FFFFFF;
+            --border: #E5E1D8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-beige); color: #2D241E; padding-bottom: 3rem; }
+
+        /* Navbar Sederhana */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; background: var(--white);
+            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
+        }
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 2px; color: var(--accent-brown); }
+        .btn-back { text-decoration: none; color: var(--soft-brown); font-weight: 700; font-size: 0.9rem; }
+
+        /* Container */
+        .container { max-width: 1000px; margin: 3rem auto; padding: 0 5%; }
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        h1 { color: var(--accent-brown); font-size: 2rem; }
+        
+        /* Tombol Aksi */
+        .btn-clear {
+            background: #FFEBEE; color: #D32F2F; border: none; padding: 0.8rem 1.5rem;
+            border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .btn-clear:hover { background: #FFCDD2; }
+
+        /* Tabel Pesanan */
+        .order-card {
+            background: var(--white); border-radius: 15px; border: 1px solid var(--border);
+            margin-bottom: 1rem; padding: 1.5rem; display: flex; justify-content: space-between;
+            align-items: center; transition: 0.3s;
+        }
+        .order-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(74, 55, 40, 0.05); }
+
+        .order-info h3 { color: var(--accent-brown); font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .order-time { font-size: 0.8rem; color: var(--soft-brown); margin-bottom: 0.8rem; display: block; }
+        .order-items { font-size: 0.9rem; line-height: 1.5; color: #444; }
+        .order-total { font-weight: 800; color: var(--accent-brown); font-size: 1.1rem; text-align: right; }
+        
+        .status-badge {
+            background: #E8F5E9; color: #2E7D32; padding: 5px 12px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 800; display: inline-block; margin-top: 5px;
+        }
+        
+        .btn-done {
+            background: var(--accent-brown); color: white; border: none; padding: 8px 16px;
+            border-radius: 8px; cursor: pointer; font-size: 0.8rem; margin-top: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .order-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .order-actions { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">ADMIN.<span>DASHBOARD</span></div>
+        <a href="index.html" class="btn-back">KEMBALI KE TOKO</a>
+    </nav>
+
+    <main class="container">
+        <div class="header-section">
+            <h1>Pesanan Masuk</h1>
+            <button onclick="clearAllOrders()" class="btn-clear">HAPUS RIWAYAT</button>
+        </div>
+        <div id="order-list"></div>
+    </main>
+
+    <script>
+        const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem('all_orders')) || [];
+            const list = document.getElementById('order-list');
+            
+            if (orders.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:3rem; color:#8C7867;">Belum ada pesanan aktif.</div>`;
+                return;
+            }
+
+            list.innerHTML = orders.slice().reverse().map((order, index) => `
+                <div class="order-card">
+                    <div class="order-info">
+                        <h3>${order.id}</h3>
+                        <span class="order-time">🕒 ${order.time}</span>
+                        <div class="order-items">
+                            ${order.items.map(i => `• ${i.name} <span style="color:#8C7867">(${i.note})</span> x${i.qty}`).join('<br>')}
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="order-total">${formatRupiah(order.total)}</div>
+                        <span class="status-badge">PREPARING</span><br>
+                        <button onclick="deleteOrder(${orders.length - 1 - index})" class="btn-done">SELESAI</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.deleteOrder = (actualIndex) => {
+            let orders = JSON.parse(localStorage.getItem('all_orders')) || [];
+            orders.splice(actualIndex, 1);
+            localStorage.setItem('all_orders', JSON.stringify(orders));
+            loadOrders();
+        };
+
+        window.clearAllOrders = () => {
+            if(confirm("Hapus semua data pesanan?")) {
+                localStorage.removeItem('all_orders');
+                loadOrders();
+            }
+        };
+
+        setInterval(loadOrders, 5000); // Auto-refresh real-time
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beige & Brew | Premium Cafe</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo" id="logo-dev">BEIGE.<span>BREW</span></div>
+        <nav class="nav-links">
+            <a href="#menu-container" class="nav-item">MENU</a>
+            <a href="#about" class="nav-item">STORY</a>
+            <a href="#contact" class="nav-item">HELP</a>
+            <button id="cart-btn" class="cart-trigger">CART [<span id="cart-count">0</span>]</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-wrapper">
+                <span class="tagline">SINCE 2026</span>
+                <h1>Crafting Comfort <br>in Every Sip.</h1>
+                <p>Nikmati perpaduan rasa premium dalam suasana yang menenangkan.</p>
+            </div>
+        </section>
+
+        <section class="menu-controls">
+            <div class="search-container">
+                <div class="search-input-group">
+                    <input type="text" id="menu-search" placeholder="Cari kopi atau pastry favoritmu...">
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <button class="filter-btn active" data-category="all">ALL MENU</button>
+                <button class="filter-btn" data-category="Coffee">COFFEE</button>
+                <button class="filter-btn" data-category="Milk Based">MILK</button>
+                <button class="filter-btn" data-category="Pastry">PASTRY</button>
+            </div>
+        </section>
+
+        <div id="menu-container" class="menu-grid"></div>
+
+        <section id="about" class="story-section">
+            <div class="story-container">
+                <div class="story-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=800&auto=format&fit=crop" alt="Coffee Shop Atmosphere">
+                    <div class="experience-badge">
+                        <span class="year">2026</span>
+                        <span class="label">EST.</span>
+                    </div>
+                </div>
+
+                <div class="story-content">
+                    <span class="tagline">OUR JOURNEY</span>
+                    <h2>Brewing Warmth, <br>Serving Memories.</h2>
+                    <p>
+                        Beige & Brew lahir dari sebuah sudut kecil di tahun 2026, didorong oleh mimpi sederhana: menciptakan ruang di mana waktu berjalan sedikit lebih lambat.
+                    </p>
+                    <p>
+                        Kami percaya bahwa kopi bukan sekadar kafein, melainkan medium untuk percakapan hangat dan ide-ide liar. Setiap biji yang kami pilih dipanggang dengan hati-hati untuk memastikan kenyamanan di setiap tegukan.
+                    </p>
+                    <div class="founder-sign">— The Founders</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="contact-section">
+            <div class="contact-card">
+                <h2>Feedback & Keluhan</h2>
+                <form id="complaint-form">
+                    <input type="text" placeholder="Nama Anda" required>
+                    <textarea placeholder="Ceritakan kendala atau saran Anda..." rows="5" required></textarea>
+                    <button type="submit" class="btn-checkout">KIRIM PESAN</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <aside id="cart-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2>YOUR ORDER</h2>
+            <button id="close-cart">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-list"></div>
+        <div class="sidebar-footer">
+            <div class="total-container">
+                <span>SUBTOTAL</span>
+                <span id="total-price">Rp 0</span>
+            </div>
+            <button id="checkout-btn" class="btn-checkout">CONFIRM ORDER</button>
+        </div>
+    </aside>
+
+    <div id="customize-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="custom-item-name">Customize</h2>
+            <div class="custom-group">
+                <label>MILK OPTION</label>
+                <select id="milk-select">
+                    <option value="0">Fresh Milk</option>
+                    <option value="5000">Oat Milk (+5k)</option>
+                    <option value="7000">Almond Milk (+7k)</option>
+                </select>
+            </div>
+            <div class="custom-group" style="margin-top:1.2rem;">
+                <label style="display:flex; align-items:center; gap:10px; font-weight: 600;">
+                    <input type="checkbox" id="extra-shot" style="width:18px; height:18px;"> Extra Espresso Shot (+5k)
+                </label>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:2rem;">
+                <button onclick="closeCustomize()" class="btn-cancel-custom">CANCEL</button>
+                <button id="confirm-add-btn" class="btn-checkout">ADD TO CART</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size:3rem; color:#4CAF50; margin-bottom:1rem;">✓</div>
+            <h2 id="order-id"></h2>
+            <div id="invoice-details" style="text-align:left; margin:1rem 0; font-size:0.9rem;"></div>
+            <p>Total: <strong id="modal-total"></strong></p>
+            <button id="close-modal" class="btn-checkout" style="margin-top:1rem;">DONE</button>
+        </div>
+    </div>
+
+    <div id="admin-greeting" class="modal-overlay" style="background: rgba(45, 36, 30, 0.98); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background: transparent; color: white; border: none; text-align: center;">
+            <h1 id="greeting-title" style="font-size: 3.5rem; margin-bottom: 1rem; font-weight: 800;"></h1>
+            <p id="greeting-sub" style="letter-spacing: 5px; opacity: 0.7; font-size: 0.9rem;"></p>
+            <div style="width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 2rem auto; position: relative; overflow: hidden;">
+                <div id="loading-progress" style="width: 0%; height: 100%; background: #fff; transition: width 1.8s cubic-bezier(0.65, 0, 0.35, 1);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Voices | Beige & Brew</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-beige: #F9F7F2;
+            --accent-brown: #4A3728;
+            --soft-brown: #8C7867;
+            --white: #FFFFFF;
+            --border: #E5E1D8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-beige); color: #2D241E; }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1.5rem 8%; background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: 2px; color: var(--accent-brown); }
+
+        .container { max-width: 1200px; margin: 3rem auto; padding: 0 5%; }
+        h1 { margin-bottom: 2rem; color: var(--accent-brown); font-size: 2rem; text-align: center; }
+
+        /* Grid Keluhan */
+        .complaint-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .complaint-card {
+            background: var(--white); padding: 2rem; border-radius: 20px;
+            border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .complaint-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(74, 55, 40, 0.08); }
+        
+        /* Garis indikator di kiri */
+        .complaint-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+            background: var(--accent-brown);
+        }
+
+        .sender { font-weight: 800; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--accent-brown); }
+        .message { font-size: 0.95rem; line-height: 1.6; color: #555; font-style: italic; margin-bottom: 1.5rem; }
+        .time { font-size: 0.75rem; color: var(--soft-brown); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        .empty-state { text-align: center; color: var(--soft-brown); font-style: italic; grid-column: 1 / -1; margin-top: 3rem; }
+        
+        .btn-home {
+            display: block; width: fit-content; margin: 3rem auto; text-decoration: none;
+            background: var(--accent-brown); color: white; padding: 10px 25px; border-radius: 50px; font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">BOSS.<span>FEEDBACK</span></div>
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--soft-brown);">CONFIDENTIAL</div>
+    </nav>
+
+    <main class="container">
+        <h1>Suara Pelanggan</h1>
+        <div id="complaint-list" class="complaint-grid"></div>
+        <a href="index.html" class="btn-home">KEMBALI KE UTAMA</a>
+    </main>
+
+    <script>
+        const list = JSON.parse(localStorage.getItem('cafe_complaints')) || [];
+        const container = document.getElementById('complaint-list');
+
+        if (list.length === 0) {
+            container.innerHTML = `<div class="empty-state">Belum ada keluhan atau masukan yang masuk.</div>`;
+        } else {
+            container.innerHTML = list.reverse().map(c => `
+                <div class="complaint-card">
+                    <div class="sender">${c.name}</div>
+                    <div class="message">"${c.message}"</div>
+                    <div class="time">${c.time}</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
