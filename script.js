@@ -9,10 +9,14 @@ let cart = JSON.parse(localStorage.getItem('cafe_cart')) || [];
 let currentCustomItem = null;
 const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
-// 1. RAHASIA & SAMBUTAN (ADMIN & BOSS)
+// ==========================================
+// 1. FITUR RAHASIA (ADMIN & BOSS) - UPDATE
+// ==========================================
 let secretBuffer = "";
 let logoTapCount = 0;
+let storyTapCount = 0;
 
+// A. Akses Keyboard (Laptop/PC) -> Ketik "admin"
 document.addEventListener('keydown', (e) => {
     secretBuffer += e.key.toLowerCase();
     if (secretBuffer.endsWith("admin")) {
@@ -21,14 +25,29 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// B. Akses HP: Tap Logo 5x -> Ke ADMIN (Pesanan) [DITUKAR]
 document.getElementById('logo-dev').onclick = () => {
     logoTapCount++;
     if (logoTapCount === 5) {
-        triggerAccess("complaints.html", "Selamat Datang, Boss!", "MEMBUKA DATA KELUHAN PELANGGAN...");
+        triggerAccess("admin.html", "Selamat Datang, Admin", "MENYIAPKAN DASHBOARD PESANAN...");
         logoTapCount = 0;
     }
     setTimeout(() => { logoTapCount = 0; }, 2000);
 };
+
+// C. Akses HP: Tap Tulisan 'STORY' 5x -> Ke BOSS (Keluhan) [DITUKAR]
+const storyLink = document.querySelector('a[href="#about"]');
+if(storyLink) {
+    storyLink.addEventListener('click', (e) => {
+        storyTapCount++;
+        if (storyTapCount === 5) {
+            e.preventDefault(); 
+            triggerAccess("complaints.html", "Selamat Datang, Boss!", "MEMBUKA DATA KELUHAN PELANGGAN...");
+            storyTapCount = 0;
+        }
+        setTimeout(() => { storyTapCount = 0; }, 2000);
+    });
+}
 
 function triggerAccess(targetUrl, title, sub) {
     const greeting = document.getElementById('admin-greeting');
@@ -40,7 +59,9 @@ function triggerAccess(targetUrl, title, sub) {
     setTimeout(() => { window.location.href = targetUrl; }, 2000);
 }
 
+// ==========================================
 // 2. RENDER MENU & LOGIC
+// ==========================================
 function renderMenu(items = menuData) {
     const container = document.getElementById('menu-container');
     container.innerHTML = items.map((item, index) => `
@@ -73,7 +94,9 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     };
 });
 
+// ==========================================
 // 3. KERANJANG PREMIUM (THUMBNAIL & QTY)
+// ==========================================
 window.handleAddToCart = (event, id) => {
     const btn = event.currentTarget;
     btn.innerText = "ADDING...";
@@ -104,7 +127,7 @@ function addFinalToCart(product, extra, note) {
     if(existing) existing.qty += 1;
     else cart.push({ ...product, price: product.price + extra, qty: 1, note: note });
     updateUI();
-    showToast("☕ Ditambahkan ke keranjang!");
+    showToast("Ditambahkan ke keranjang!");
 }
 
 function updateUI() {
@@ -164,7 +187,9 @@ document.getElementById('checkout-btn').onclick = function() {
     document.getElementById('cart-sidebar').classList.remove('active');
 };
 
+// ==========================================
 // 4. KELUHAN & TOAST
+// ==========================================
 document.getElementById('complaint-form').onsubmit = function(e) {
     e.preventDefault();
     const name = this.querySelector('input').value;
@@ -172,7 +197,7 @@ document.getElementById('complaint-form').onsubmit = function(e) {
     const allComplaints = JSON.parse(localStorage.getItem('cafe_complaints')) || [];
     allComplaints.push({ name, message, time: new Date().toLocaleString() });
     localStorage.setItem('cafe_complaints', JSON.stringify(allComplaints));
-    showToast("✅ Keluhan Anda telah tersimpan.");
+    showToast("Terimakasih atas Respon Anda");
     this.reset();
 };
 
