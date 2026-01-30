@@ -10,11 +10,12 @@ let currentCustomItem = null;
 const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
 // ==========================================
-// 1. FITUR RAHASIA (ADMIN & BOSS) - UPDATE
+// 1. FITUR RAHASIA (ADMIN & BOSS) - FIX SCROLL
 // ==========================================
 let secretBuffer = "";
 let logoTapCount = 0;
 let storyTapCount = 0;
+let storyTimer = null; // Timer untuk membedakan klik biasa vs rahasia
 
 // A. Akses Keyboard (Laptop/PC) -> Ketik "admin"
 document.addEventListener('keydown', (e) => {
@@ -25,7 +26,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// B. Akses HP: Tap Logo 5x -> Ke ADMIN (Pesanan) [DITUKAR]
+// B. Akses HP: Tap Logo 5x -> Ke ADMIN (Pesanan)
 document.getElementById('logo-dev').onclick = () => {
     logoTapCount++;
     if (logoTapCount === 5) {
@@ -35,17 +36,33 @@ document.getElementById('logo-dev').onclick = () => {
     setTimeout(() => { logoTapCount = 0; }, 2000);
 };
 
-// C. Akses HP: Tap Tulisan 'STORY' 5x -> Ke BOSS (Keluhan) [DITUKAR]
+// C. Akses HP: Tap Tulisan 'STORY' 5x -> Ke BOSS (Keluhan) [FIX AUTO SCROLL]
 const storyLink = document.querySelector('a[href="#about"]');
 if(storyLink) {
     storyLink.addEventListener('click', (e) => {
+        // 1. STOP Browser melakukan scroll otomatis
+        e.preventDefault();
+        
         storyTapCount++;
+
+        // 2. Jika sudah 5x klik, langsung masuk BOSS
         if (storyTapCount === 5) {
-            e.preventDefault(); 
+            clearTimeout(storyTimer); // Batalkan timer scroll
             triggerAccess("complaints.html", "Selamat Datang, Boss!", "MEMBUKA DATA KELUHAN PELANGGAN...");
             storyTapCount = 0;
+            return;
         }
-        setTimeout(() => { storyTapCount = 0; }, 2000);
+
+        // 3. Jika belum 5x, tunggu sebentar (400ms)
+        // Kalau user berhenti klik, berarti dia cuma mau ke Story biasa (scroll manual)
+        clearTimeout(storyTimer);
+        storyTimer = setTimeout(() => {
+            if (storyTapCount > 0 && storyTapCount < 5) {
+                // Scroll manual via JS
+                document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+            }
+            storyTapCount = 0;
+        }, 400);
     });
 }
 
@@ -127,7 +144,7 @@ function addFinalToCart(product, extra, note) {
     if(existing) existing.qty += 1;
     else cart.push({ ...product, price: product.price + extra, qty: 1, note: note });
     updateUI();
-    showToast("Ditambahkan ke keranjang!");
+    showToast("☕ Ditambahkan ke keranjang!");
 }
 
 function updateUI() {
@@ -197,7 +214,7 @@ document.getElementById('complaint-form').onsubmit = function(e) {
     const allComplaints = JSON.parse(localStorage.getItem('cafe_complaints')) || [];
     allComplaints.push({ name, message, time: new Date().toLocaleString() });
     localStorage.setItem('cafe_complaints', JSON.stringify(allComplaints));
-    showToast("Terimakasih atas Respon Anda");
+    showToast("✅ Keluhan Anda telah tersimpan.");
     this.reset();
 };
 
